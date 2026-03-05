@@ -51,16 +51,24 @@
 - PRD 분석과 함께 기존 구현 파일 반드시 확인 (Glob + Read 병렬 실행)
 - 이미 구현된 것과 미구현된 것을 명확히 구분하여 로드맵에 반영
 
-### Phase 구조 원칙
-- Phase 1: 환경 설정 → 연동 테스트 (MVP 완성)
-- Phase 2: UX 개선 (다크모드, SEO, 에러 처리)
-- Phase 3: 배포 및 최적화
-- Phase 4: 운영 및 지속 개선
+### 5-Phase 구조 원칙 (2026-03-05 사용자 요청 기반)
+- Phase 1: 프로젝트 초기 설정 (골격) - 환경 변수, 이미지 도메인, 라우팅 확인, 타입 정의
+- Phase 2: 공통 모듈 개발 - API 클라이언트 안정화, 데이터 검증, React Query 훅
+- Phase 3: 핵심 기능 개발 - 목록/상세 페이지, 필터/검색, 에러 페이지, 페이지네이션
+- Phase 4: 추가 기능 개발 - Featured 섹션, SEO, 다크모드, 반응형 완성
+- Phase 5: 최적화 및 배포 - 성능 최적화, Vercel 배포, 모니터링
 
 ### 수락 기준 작성 원칙
 - 체크박스 형식으로 측정 가능하게 작성
 - 기술적 세부사항보다 사용자 관점에서 검증 가능한 조건 명시
-- 이미 구현된 부분은 "검토" 표기
+- 이미 구현된 부분은 "검토" 또는 "(이미 구현됨)" 표기
+
+### 신규 파일 위치 패턴 (ROADMAP 2차 버전)
+- React Query 훅: `hooks/use-projects.ts`, `hooks/use-project.ts`, `hooks/index.ts`
+- "더 보기" 버튼: `components/portfolio/load-more-button.tsx`
+- Featured 섹션: `components/sections/featured-projects.tsx`
+- SEO: `app/sitemap.ts`, `app/robots.ts`
+- 에러 페이지: `app/not-found.tsx`, `app/error.tsx`, `app/portfolio/error.tsx`
 
 ## 상세 패턴 문서
 - `patterns.md` 참조 (로드맵 아키텍처 패턴 상세)
