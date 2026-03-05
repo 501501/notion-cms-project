@@ -16,21 +16,30 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 })
 
+// 사이트 기본 URL (환경 변수 → 기본값 순)
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://portfolio.example.com'
+const authorName = process.env.NEXT_PUBLIC_AUTHOR_NAME ?? 'Your Name'
+
 export const metadata: Metadata = {
   title: {
-    default: 'Starter Kit',
-    template: '%s | Starter Kit',
+    default: `${authorName} | 포트폴리오`,
+    template: `%s | ${authorName}`,
   },
   description:
-    'Next.js 16 + React 19 + TailwindCSS v4 기반의 모던 웹 스타터킷',
-  keywords: ['Next.js', 'React', 'TailwindCSS', 'shadcn/ui', 'TypeScript'],
-  authors: [{ name: 'Your Name' }],
-  creator: 'Your Name',
+    'Notion CMS 기반 개인 포트폴리오 사이트. 웹, 모바일, 디자인 프로젝트 소개.',
+  keywords: ['포트폴리오', '개발자', '프로젝트', 'Next.js', 'TypeScript', 'React'],
+  authors: [{ name: authorName }],
+  creator: authorName,
   openGraph: {
     type: 'website',
     locale: 'ko_KR',
-    url: 'https://starter-kit.example.com',
-    siteName: 'Starter Kit',
+    url: siteUrl,
+    siteName: `${authorName} Portfolio`,
+  },
+  // 검색엔진 크롤링 허용
+  robots: {
+    index: true,
+    follow: true,
   },
 }
 
