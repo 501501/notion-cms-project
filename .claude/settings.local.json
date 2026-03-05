@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npx shadcn@latest:*)",
+      "Bash(npm run:*)",
+      "Bash(curl:*)",
+      "Bash(git:*)",
+      "mcp__shadcn"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "playwright"
+  ],
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "file_path=$(jq -r '.tool_input.file_path // empty' 2>/dev/null); if [ -n \"$file_path\" ] && [ -f \"$file_path\" ] && [[ \"$file_path\" =~ \\.ts$ ]]; then npx prettier --write \"$file_path\" 2>/dev/null && npx eslint --fix \"$file_path\" 2>/dev/null; fi"
+          }
+        ]
+      }
+    ]
+  }
+}
