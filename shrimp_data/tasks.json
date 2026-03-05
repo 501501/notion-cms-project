@@ -1,0 +1,624 @@
+{
+  "tasks": [
+    {
+      "id": "a63a4a51-d958-41de-a57c-4d5184eeb58f",
+      "name": "Phase 1-1: Notion API 연동 환경 설정",
+      "description": "Notion Integration 생성, API 키 획득 후 .env.local에 설정. Notion DB 스키마 필드 생성 및 샘플 프로젝트 3개 입력",
+      "notes": "- .env.local은 .gitignore에 이미 포함됨\n- Notion API v5 기준: dataSources.query() 사용\n- API 키는 절대 공개하면 안 됨\n- DB ID는 32자리 (하이픈 제외)",
+      "status": "pending",
+      "dependencies": [],
+      "createdAt": "2026-03-05T07:15:57.539Z",
+      "updatedAt": "2026-03-05T07:15:57.539Z",
+      "relatedFiles": [
+        {
+          "path": ".env.local",
+          "type": "CREATE",
+          "description": "Notion API 키 및 데이터베이스 ID 저장",
+          "lineStart": 1,
+          "lineEnd": 2
+        },
+        {
+          "path": "lib/notion/client.ts",
+          "type": "REFERENCE",
+          "description": "환경 변수 검증 로직 확인"
+        }
+      ],
+      "implementationGuide": "1. Notion 관리자 페이지 → Integrations 진입\n2. Create new integration → \"notion-cms\" 생성\n3. API Key 복사\n4. Notion 데이터베이스 생성 (또는 기존 DB 사용)\n5. DB ID 확인 (URL의 마지막 32자리)\n6. .env.local 파일 생성:\nNOTION_API_KEY=<API_KEY>\nNOTION_DATABASE_ID=<DB_ID>\n7. Integration에 데이터베이스 연결 권한 부여\n8. Notion DB 스키마 필드 생성: title(제목), category(선택), description(리치 텍스트), tags(다중 선택), publishedDate(날짜), image(파일), content(리치 텍스트), externalLink(URL), featured(체크박스), status(선택)\n9. 샘플 프로젝트 3개 입력 (웹, 모바일, 디자인 각 1개)",
+      "verificationCriteria": "✓ .env.local 파일 생성 (NOTION_API_KEY, NOTION_DATABASE_ID 설정)\n✓ Notion Integration 권한 확인\n✓ Notion DB 스키마 필드 완성\n✓ 샘플 프로젝트 3개 입력 (카테고리별 1개)\n✓ npm run dev 실행 후 환경 변수 미설정 경고 없음",
+      "analysisResult": "Notion CMS 기반 개인 포트폴리오 사이트 개발. 5 Phase로 구성된 로드맵 기반 구체적인 마일스톤 설정:\n- Phase 1: 환경 설정 및 기본 구조 검증 (3일)\n- Phase 2: 공통 모듈 및 API 안정화 (4일)\n- Phase 3: 핵심 기능 완성 (5일)\n- Phase 4: 추가 기능 및 최적화 (5일)\n- Phase 5: 배포 및 모니터링 (5일)\n\n각 Phase는 독립적 태스크로 분해되며, 순차적 의존성 관리로 팀 생산성 극대화."
+    },
+    {
+      "id": "bf3df3ca-46ae-4e18-ace1-2ee16810765c",
+      "name": "Phase 1-2: Next.js 이미지 도메인 설정",
+      "description": "Notion 이미지 URL 도메인을 next.config.ts의 remotePatterns에 등록하여 next/image 최적화 활성화",
+      "notes": "- domains 설정은 deprecated, remotePatterns 사용 필수\n- Notion 파일 URL은 약 1시간 유효성 (ISR 60초로 커버)\n- 외부 이미지(Unsplash)는 테스트용",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "a63a4a51-d958-41de-a57c-4d5184eeb58f"
+        }
+      ],
+      "createdAt": "2026-03-05T07:15:57.539Z",
+      "updatedAt": "2026-03-05T07:15:57.539Z",
+      "relatedFiles": [
+        {
+          "path": "next.config.ts",
+          "type": "CREATE",
+          "description": "이미지 도메인 설정"
+        },
+        {
+          "path": "components/portfolio/project-card.tsx",
+          "type": "REFERENCE",
+          "description": "이미지 렌더링 확인"
+        }
+      ],
+      "implementationGuide": "1. next.config.ts 파일 생성 (프로젝트 루트)\n2. 다음 설정 추가:\nconst nextConfig = {\n  images: {\n    remotePatterns: [\n      { protocol: 'https', hostname: 'notion.so' },\n      { protocol: 'https', hostname: 's3.us-west-2.amazonaws.com' },\n      { protocol: 'https', hostname: 'prod-files-secure.s3.us-west-2.amazonaws.com' },\n      { protocol: 'https', hostname: 'images.unsplash.com' }\n    ]\n  }\n}\n3. npm run dev 재시작\n4. /portfolio 페이지 접속 후 이미지 렌더링 확인",
+      "verificationCriteria": "✓ next.config.ts 생성 (remotePatterns 설정)\n✓ npm run dev 후 콘솔 에러 없음\n✓ /portfolio 페이지에서 이미지 정상 표시\n✓ 이미지 없는 프로젝트에서 플레이스홀더 표시",
+      "analysisResult": "Notion CMS 기반 개인 포트폴리오 사이트 개발. 5 Phase로 구성된 로드맵 기반 구체적인 마일스톤 설정:\n- Phase 1: 환경 설정 및 기본 구조 검증 (3일)\n- Phase 2: 공통 모듈 및 API 안정화 (4일)\n- Phase 3: 핵심 기능 완성 (5일)\n- Phase 4: 추가 기능 및 최적화 (5일)\n- Phase 5: 배포 및 모니터링 (5일)\n\n각 Phase는 독립적 태스크로 분해되며, 순차적 의존성 관리로 팀 생산성 극대화."
+    },
+    {
+      "id": "fa70cc6c-cd42-498d-87c4-cc4e4d45dd94",
+      "name": "Phase 1-3: 기본 라우팅 구조 검토",
+      "description": "기존 구현된 라우팅 구조(/portfolio, /portfolio/[id], /api/projects)가 Next.js 16 App Router 규칙에 맞는지 검토",
+      "notes": "- Next.js 16: searchParams, params는 Promise<> 타입\n- generateStaticParams는 이미 구현됨\n- 검토만 진행 (수정 불필요)",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "a63a4a51-d958-41de-a57c-4d5184eeb58f"
+        },
+        {
+          "taskId": "bf3df3ca-46ae-4e18-ace1-2ee16810765c"
+        }
+      ],
+      "createdAt": "2026-03-05T07:15:57.539Z",
+      "updatedAt": "2026-03-05T07:15:57.539Z",
+      "relatedFiles": [
+        {
+          "path": "app/portfolio/page.tsx",
+          "type": "REFERENCE",
+          "description": "포트폴리오 목록 라우트"
+        },
+        {
+          "path": "app/portfolio/[id]/page.tsx",
+          "type": "REFERENCE",
+          "description": "프로젝트 상세 라우트"
+        },
+        {
+          "path": "app/api/projects/route.ts",
+          "type": "REFERENCE",
+          "description": "API 라우트"
+        }
+      ],
+      "implementationGuide": "1. npm run dev 실행\n2. 각 라우트 접근 확인:\n   - http://localhost:3000/ (홈)\n   - http://localhost:3000/portfolio (목록)\n   - http://localhost:3000/portfolio/[아무_id] (상세)\n3. API 테스트:\n   - curl http://localhost:3000/api/projects\n   - curl http://localhost:3000/api/projects/[id]\n4. Navbar 링크 동작 확인\n5. 타입 에러 확인: npx tsc --noEmit",
+      "verificationCriteria": "✓ 모든 라우트 접근 가능\n✓ API 응답 200 OK\n✓ Navbar 링크 정상 동작\n✓ TypeScript 컴파일 오류 없음",
+      "analysisResult": "Notion CMS 기반 개인 포트폴리오 사이트 개발. 5 Phase로 구성된 로드맵 기반 구체적인 마일스톤 설정:\n- Phase 1: 환경 설정 및 기본 구조 검증 (3일)\n- Phase 2: 공통 모듈 및 API 안정화 (4일)\n- Phase 3: 핵심 기능 완성 (5일)\n- Phase 4: 추가 기능 및 최적화 (5일)\n- Phase 5: 배포 및 모니터링 (5일)\n\n각 Phase는 독립적 태스크로 분해되며, 순차적 의존성 관리로 팀 생산성 극대화."
+    },
+    {
+      "id": "bfad85e5-2d37-4971-8c82-339e47864d21",
+      "name": "Phase 1-4: TypeScript 타입 정의 검토",
+      "description": "types/notion.ts의 타입이 실제 Notion API 응답 구조와 일치하는지 확인",
+      "notes": "- any 타입은 Notion API 타입 한계상 불가피\n- 타입 오류가 없으면 현 상태 유지\n- 엣지 케이스는 Phase 2에서 런타임 검증으로 대응",
+      "status": "pending",
+      "dependencies": [],
+      "createdAt": "2026-03-05T07:15:57.539Z",
+      "updatedAt": "2026-03-05T07:15:57.539Z",
+      "relatedFiles": [
+        {
+          "path": "types/notion.ts",
+          "type": "REFERENCE",
+          "description": "타입 정의 확인"
+        },
+        {
+          "path": "lib/notion/parser.ts",
+          "type": "REFERENCE",
+          "description": "파싱 로직 및 타입 매칭 확인"
+        }
+      ],
+      "implementationGuide": "1. npx tsc --noEmit 실행 (타입 오류 확인)\n2. types/notion.ts 검토: ProjectCategory, ProjectStatus, Project, ProjectSummary 타입 확인\n3. lib/notion/parser.ts의 parseProjectPage() 반환 타입 확인\n4. IDE 자동완성으로 타입 추론 정상 동작 확인\n5. 필요시 any 타입을 구체적인 타입으로 개선 (선택)",
+      "verificationCriteria": "✓ npx tsc --noEmit 실행 시 타입 오류 없음\n✓ IDE 자동완성 정상 동작\n✓ parseProjectPage() 반환 타입이 ProjectSummary와 일치",
+      "analysisResult": "Notion CMS 기반 개인 포트폴리오 사이트 개발. 5 Phase로 구성된 로드맵 기반 구체적인 마일스톤 설정:\n- Phase 1: 환경 설정 및 기본 구조 검증 (3일)\n- Phase 2: 공통 모듈 및 API 안정화 (4일)\n- Phase 3: 핵심 기능 완성 (5일)\n- Phase 4: 추가 기능 및 최적화 (5일)\n- Phase 5: 배포 및 모니터링 (5일)\n\n각 Phase는 독립적 태스크로 분해되며, 순차적 의존성 관리로 팀 생산성 극대화."
+    },
+    {
+      "id": "6a8514a2-be21-4ed4-80ad-8e3da9bb70b2",
+      "name": "Phase 2-1: Notion API 클라이언트 안정화",
+      "description": "lib/notion/client.ts와 queries.ts에 에러 핸들링, 재시도 로직, 레이트 리밋 대응 강화",
+      "notes": "- Notion API 레이트 리밋: 초당 3회\n- ISR 캐싱으로 실제 빈도는 낮음\n- NotionAPIError 타입 확인 (구체적 에러 분기)",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "a63a4a51-d958-41de-a57c-4d5184eeb58f"
+        },
+        {
+          "taskId": "bfad85e5-2d37-4971-8c82-339e47864d21"
+        }
+      ],
+      "createdAt": "2026-03-05T07:15:57.539Z",
+      "updatedAt": "2026-03-05T07:15:57.539Z",
+      "relatedFiles": [
+        {
+          "path": "lib/notion/client.ts",
+          "type": "TO_MODIFY",
+          "description": "에러 핸들링 보강"
+        },
+        {
+          "path": "lib/notion/queries.ts",
+          "type": "TO_MODIFY",
+          "description": "에러 분기 및 재시도 로직 추가"
+        },
+        {
+          "path": "components/portfolio/portfolio-list.tsx",
+          "type": "REFERENCE",
+          "description": "에러 UI 렌더링 확인"
+        }
+      ],
+      "implementationGuide": "1. lib/notion/client.ts 검토: 인증 실패(401) 시 명확한 에러 메시지\n2. lib/notion/queries.ts의 getProjects() 개선:\n   - try/catch로 네트워크 오류 처리\n   - Notion API 429(레이트 리밋) 시 콘솔 경고\n   - 타임아웃 시 null/빈 배열 반환\n3. getProjectById() 확인: 이미 null 반환 구현 있음\n4. getAllProjectIds() 확인: 페이지네이션 로직 검토\n5. portfolio-list.tsx에서 에러 UI 표시 확인",
+      "verificationCriteria": "✓ 잘못된 API 키로 요청 시 에러 메시지 출력\n✓ 네트워크 오류 시 graceful 실패 (앱 크래시 없음)\n✓ portfolio-list에서 에러 UI 정상 표시\n✓ 단위 테스트: 각 함수의 에러 케이스 확인",
+      "analysisResult": "Notion CMS 기반 개인 포트폴리오 사이트 개발. 5 Phase로 구성된 로드맵 기반 구체적인 마일스톤 설정:\n- Phase 1: 환경 설정 및 기본 구조 검증 (3일)\n- Phase 2: 공통 모듈 및 API 안정화 (4일)\n- Phase 3: 핵심 기능 완성 (5일)\n- Phase 4: 추가 기능 및 최적화 (5일)\n- Phase 5: 배포 및 모니터링 (5일)\n\n각 Phase는 독립적 태스크로 분해되며, 순차적 의존성 관리로 팀 생산성 극대화."
+    },
+    {
+      "id": "e4881104-457c-4447-9ef0-16f2856d2af6",
+      "name": "Phase 2-2: 데이터 변환 및 검증 강화",
+      "description": "parser.ts의 데이터 변환에 런타임 타입 검증 추가, 엣지 케이스(빈 필드) 처리 강화",
+      "notes": "- any 타입 광범위 사용 - Notion API 구조 복잡도로 불가피\n- 런타임 검증: 개발 단계에서만 console.warn (프로덕션 silent)",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "6a8514a2-be21-4ed4-80ad-8e3da9bb70b2"
+        }
+      ],
+      "createdAt": "2026-03-05T07:15:57.539Z",
+      "updatedAt": "2026-03-05T07:15:57.539Z",
+      "relatedFiles": [
+        {
+          "path": "lib/notion/parser.ts",
+          "type": "TO_MODIFY",
+          "description": "런타임 검증 로직 추가"
+        }
+      ],
+      "implementationGuide": "1. lib/notion/parser.ts 검토:\n   - 제목 없음: '제목 없음' 기본값 (이미 구현 확인)\n   - 카테고리 없음: '기타' 기본값 (이미 구현 확인)\n   - 날짜 형식 오류: date-fns isValid() 활용 (추가 개선)\n   - 빈 tags: 빈 배열 반환 (이미 구현 확인)\n2. parseProjectPage() 함수별 기본값 처리 재확인\n3. 엣지 케이스 테스트: 필드 비워둔 Notion 페이지 생성 후 파싱 테스트\n4. 콘솔 에러/경고 없음 확인",
+      "verificationCriteria": "✓ 빈 필드 프로젝트도 정상 파싱\n✓ 날짜 형식 오류 시 null 반환 (UI에서 미표시)\n✓ 콘솔 에러 없음\n✓ project-card.tsx에서 플레이스홀더 정상 표시",
+      "analysisResult": "Notion CMS 기반 개인 포트폴리오 사이트 개발. 5 Phase로 구성된 로드맵 기반 구체적인 마일스톤 설정:\n- Phase 1: 환경 설정 및 기본 구조 검증 (3일)\n- Phase 2: 공통 모듈 및 API 안정화 (4일)\n- Phase 3: 핵심 기능 완성 (5일)\n- Phase 4: 추가 기능 및 최적화 (5일)\n- Phase 5: 배포 및 모니터링 (5일)\n\n각 Phase는 독립적 태스크로 분해되며, 순차적 의존성 관리로 팀 생산성 극대화."
+    },
+    {
+      "id": "b523416d-3412-466d-bcfc-ea3628d41873",
+      "name": "Phase 2-3: React Query 커스텀 훅 구현",
+      "description": "hooks/use-projects.ts, use-project.ts 구현. 페이지네이션, 필터 변경 시 자동 재조회 지원",
+      "notes": "- @tanstack/react-query v5+ 기준\n- query-provider.tsx에 이미 QueryClient 설정 완료\n- useInfiniteQuery: 페이지네이션, 검색 필터 변경 시 초기화",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "a63a4a51-d958-41de-a57c-4d5184eeb58f"
+        },
+        {
+          "taskId": "6a8514a2-be21-4ed4-80ad-8e3da9bb70b2"
+        }
+      ],
+      "createdAt": "2026-03-05T07:15:57.539Z",
+      "updatedAt": "2026-03-05T07:15:57.539Z",
+      "relatedFiles": [
+        {
+          "path": "hooks/use-projects.ts",
+          "type": "CREATE",
+          "description": "프로젝트 목록 조회 훅"
+        },
+        {
+          "path": "hooks/use-project.ts",
+          "type": "CREATE",
+          "description": "단일 프로젝트 조회 훅"
+        },
+        {
+          "path": "hooks/index.ts",
+          "type": "CREATE",
+          "description": "배럴 익스포트"
+        },
+        {
+          "path": "components/providers/query-provider.tsx",
+          "type": "REFERENCE",
+          "description": "QueryClient 설정 확인"
+        }
+      ],
+      "implementationGuide": "1. hooks/use-projects.ts 생성:\n   - useInfiniteQuery 활용\n   - queryKey: ['projects', category, search, cursor]\n   - API: GET /api/projects?category=...&search=...&cursor=...\n   - staleTime: 60_000 (기존 query-provider 설정과 일치)\n   - 반환: { data, isLoading, error, hasNextPage, fetchNextPage }\n2. hooks/use-project.ts 생성:\n   - useQuery 활용\n   - queryKey: ['project', id]\n   - API: GET /api/projects/[id]\n3. hooks/index.ts 배럴 익스포트\n4. 클라이언트 컴포넌트에서 훅 사용 (서버 컴포넌트는 직접 함수 호출)",
+      "verificationCriteria": "✓ use-projects.ts: 프로젝트 목록 조회 정상\n✓ use-project.ts: 단일 프로젝트 조회 정상\n✓ 캐시 작동: 동일 파라미터로 2회 호출 시 네트워크 요청 1회만 발생\n✓ 에러 상태 반환: API 오류 시 error 필드 포함\n✓ 필터 변경 시 queryKey 변경으로 자동 재조회",
+      "analysisResult": "Notion CMS 기반 개인 포트폴리오 사이트 개발. 5 Phase로 구성된 로드맵 기반 구체적인 마일스톤 설정:\n- Phase 1: 환경 설정 및 기본 구조 검증 (3일)\n- Phase 2: 공통 모듈 및 API 안정화 (4일)\n- Phase 3: 핵심 기능 완성 (5일)\n- Phase 4: 추가 기능 및 최적화 (5일)\n- Phase 5: 배포 및 모니터링 (5일)\n\n각 Phase는 독립적 태스크로 분해되며, 순차적 의존성 관리로 팀 생산성 극대화."
+    },
+    {
+      "id": "7849bd84-1c7e-47f6-9f8b-2c45f87c0776",
+      "name": "Phase 3-1: 프로젝트 목록 페이지 완성",
+      "description": "app/portfolio/page.tsx와 관련 컴포넌트를 실제 Notion 데이터로 검증. 로딩 상태, 빈 결과, 결과 카운트 표시",
+      "notes": "- portfolio-list.tsx는 서버 컴포넌트\n- portfolio-filters.tsx는 클라이언트 컴포넌트\n- 검색은 클라이언트 사이드 필터링 (Notion API 텍스트 검색 미지원)\n- 대량 데이터(100개+) 시 성능 고려",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "a63a4a51-d958-41de-a57c-4d5184eeb58f"
+        },
+        {
+          "taskId": "6a8514a2-be21-4ed4-80ad-8e3da9bb70b2"
+        },
+        {
+          "taskId": "b523416d-3412-466d-bcfc-ea3628d41873"
+        }
+      ],
+      "createdAt": "2026-03-05T07:15:57.539Z",
+      "updatedAt": "2026-03-05T07:15:57.539Z",
+      "relatedFiles": [
+        {
+          "path": "app/portfolio/page.tsx",
+          "type": "REFERENCE",
+          "description": "포트폴리오 목록 페이지"
+        },
+        {
+          "path": "components/portfolio/portfolio-list.tsx",
+          "type": "TO_MODIFY",
+          "description": "에러 UI 개선, 카운트 표시"
+        },
+        {
+          "path": "components/portfolio/project-card.tsx",
+          "type": "REFERENCE",
+          "description": "카드 렌더링 확인"
+        }
+      ],
+      "implementationGuide": "1. /portfolio 페이지 접속\n2. 렌더링 검증:\n   - 카드 그리드: 모바일 1열, 태블릿 2열, 데스크톱 3열\n   - 카드 요소: 썸네일, 카테고리 배지, 제목, 설명(3줄), 태그, 날짜\n3. Suspense fallback: 로딩 중 스켈레톤 6개 표시\n4. 빈 결과: 검색 결과 없음 시 안내 메시지\n5. 카운트: '총 N개의 프로젝트' 표시\n6. ISR 동작: Notion 데이터 수정 후 60초 내 반영 확인",
+      "verificationCriteria": "✓ /portfolio 페이지 Notion 데이터 렌더링\n✓ 카드 그리드 반응형 레이아웃 (1/2/3열)\n✓ 결과 카운트 표시\n✓ 로딩 스켈레톤 표시\n✓ 빈 결과 안내 메시지\n✓ ISR revalidate=60 동작 확인",
+      "analysisResult": "Notion CMS 기반 개인 포트폴리오 사이트 개발. 5 Phase로 구성된 로드맵 기반 구체적인 마일스톤 설정:\n- Phase 1: 환경 설정 및 기본 구조 검증 (3일)\n- Phase 2: 공통 모듈 및 API 안정화 (4일)\n- Phase 3: 핵심 기능 완성 (5일)\n- Phase 4: 추가 기능 및 최적화 (5일)\n- Phase 5: 배포 및 모니터링 (5일)\n\n각 Phase는 독립적 태스크로 분해되며, 순차적 의존성 관리로 팀 생산성 극대화."
+    },
+    {
+      "id": "9c305ed8-2073-4336-a23a-71869b1a5d43",
+      "name": "Phase 3-2: 프로젝트 상세 페이지 완성",
+      "description": "app/portfolio/[id]/page.tsx의 Notion 블록 콘텐츠 렌더링 검증. 외부 링크, 메타 정보, 이미지",
+      "notes": "- generateStaticParams로 빌드 시 정적 경로 사전 생성\n- notion-renderer.tsx의 리스트 그룹화 로직 동작 확인\n- 이미지 URL 만료 이슈 주의 (ISR 60초로 대부분 커버)",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "a63a4a51-d958-41de-a57c-4d5184eeb58f"
+        },
+        {
+          "taskId": "6a8514a2-be21-4ed4-80ad-8e3da9bb70b2"
+        }
+      ],
+      "createdAt": "2026-03-05T07:15:57.539Z",
+      "updatedAt": "2026-03-05T07:15:57.539Z",
+      "relatedFiles": [
+        {
+          "path": "app/portfolio/[id]/page.tsx",
+          "type": "REFERENCE",
+          "description": "프로젝트 상세 페이지"
+        },
+        {
+          "path": "components/portfolio/notion-renderer.tsx",
+          "type": "REFERENCE",
+          "description": "Notion 블록 렌더링"
+        }
+      ],
+      "implementationGuide": "1. /portfolio/[아무_id] 접속\n2. 렌더링 검증:\n   - 썸네일 이미지 (없으면 미표시)\n   - 카테고리 배지, 태그, 날짜\n   - 설명 텍스트\n   - 외부 링크 버튼 (externalLink 있을 경우)\n3. Notion 블록 렌더링:\n   - heading, paragraph, code, image, list, quote, callout, divider\n   - 코드 블록 언어 표시 (Python, JavaScript 등)\n   - 리스트 그룹화 (notion-renderer.tsx)\n4. 메타데이터: <title>, OG 태그 (generateMetadata)\n5. 존재하지 않는 ID: 404 페이지 표시 (notFound() 호출)\n6. \"포트폴리오로 돌아가기\" 버튼 동작",
+      "verificationCriteria": "✓ 상세 페이지 렌더링 정상\n✓ Notion 블록 콘텐츠 렌더링 (heading, code, list 등)\n✓ 메타데이터 생성 (title, OG 태그)\n✓ 존재하지 않는 ID: 404 표시\n✓ 외부 링크 버튼 정상 동작",
+      "analysisResult": "Notion CMS 기반 개인 포트폴리오 사이트 개발. 5 Phase로 구성된 로드맵 기반 구체적인 마일스톤 설정:\n- Phase 1: 환경 설정 및 기본 구조 검증 (3일)\n- Phase 2: 공통 모듈 및 API 안정화 (4일)\n- Phase 3: 핵심 기능 완성 (5일)\n- Phase 4: 추가 기능 및 최적화 (5일)\n- Phase 5: 배포 및 모니터링 (5일)\n\n각 Phase는 독립적 태스크로 분해되며, 순차적 의존성 관리로 팀 생산성 극대화."
+    },
+    {
+      "id": "ff0d67a6-7071-4b59-9f8c-5261c97ab969",
+      "name": "Phase 3-3: 필터링 및 검색 기능 완성",
+      "description": "portfolio-filters.tsx의 카테고리 필터와 검색 기능 검증. URL 쿼리 파라미터 기반",
+      "notes": "- portfolio-filters.tsx는 이미 useRouter, useTransition 구현\n- 검색은 클라이언트 필터링 (실시간 검색 미지원)\n- URL 파라미터 기반이므로 SEO 친화적",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "7849bd84-1c7e-47f6-9f8b-2c45f87c0776"
+        }
+      ],
+      "createdAt": "2026-03-05T07:15:57.539Z",
+      "updatedAt": "2026-03-05T07:15:57.539Z",
+      "relatedFiles": [
+        {
+          "path": "components/portfolio/portfolio-filters.tsx",
+          "type": "REFERENCE",
+          "description": "필터 및 검색 입력"
+        }
+      ],
+      "implementationGuide": "1. 카테고리 필터:\n   - 탭 클릭 시 URL ?category=웹 변경\n   - 결과 필터링 정상\n2. 검색 기능:\n   - 입력 후 '검색' 버튼 클릭\n   - URL ?search=React 변경\n   - 검색 초기화 버튼 (X) 동작\n3. 로딩 인디케이터: 필터/검색 변경 시 isPending 상태\n4. URL 공유: /portfolio?category=웹&search=React 직접 접근 시 필터 유지\n5. 브라우저 뒤로가기: 이전 필터 상태 복원",
+      "verificationCriteria": "✓ 카테고리 필터 동작 (URL 파라미터 변경)\n✓ 검색 입력 및 결과 반영\n✓ 검색 초기화 버튼 동작\n✓ 로딩 인디케이터 표시\n✓ URL 공유 시 필터 유지\n✓ 브라우저 뒤로가기: 필터 복원",
+      "analysisResult": "Notion CMS 기반 개인 포트폴리오 사이트 개발. 5 Phase로 구성된 로드맵 기반 구체적인 마일스톤 설정:\n- Phase 1: 환경 설정 및 기본 구조 검증 (3일)\n- Phase 2: 공통 모듈 및 API 안정화 (4일)\n- Phase 3: 핵심 기능 완성 (5일)\n- Phase 4: 추가 기능 및 최적화 (5일)\n- Phase 5: 배포 및 모니터링 (5일)\n\n각 Phase는 독립적 태스크로 분해되며, 순차적 의존성 관리로 팀 생산성 극대화."
+    },
+    {
+      "id": "e4c735b6-c2f0-480a-880d-d5b5e9806c7a",
+      "name": "Phase 3-4: 에러 페이지 구현",
+      "description": "app/not-found.tsx, app/error.tsx, app/portfolio/error.tsx 구현. 404, 전역 에러, 섹션 에러 처리",
+      "notes": "- error.tsx는 반드시 'use client' 필수\n- props: { error: Error, reset: () => void }\n- Navbar + Footer는 layout.tsx에서 렌더링되므로 에러 페이지에도 표시됨",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "a63a4a51-d958-41de-a57c-4d5184eeb58f"
+        }
+      ],
+      "createdAt": "2026-03-05T07:15:57.539Z",
+      "updatedAt": "2026-03-05T07:15:57.539Z",
+      "relatedFiles": [
+        {
+          "path": "app/not-found.tsx",
+          "type": "CREATE",
+          "description": "404 페이지"
+        },
+        {
+          "path": "app/error.tsx",
+          "type": "CREATE",
+          "description": "전역 에러 페이지"
+        },
+        {
+          "path": "app/portfolio/error.tsx",
+          "type": "CREATE",
+          "description": "포트폴리오 에러 경계"
+        }
+      ],
+      "implementationGuide": "1. app/not-found.tsx 생성:\n   - 404 Not Found 페이지\n   - \"포트폴리오로 돌아가기\" 버튼\n2. app/error.tsx 생성:\n   - 'use client' 지시자\n   - props: error, reset\n   - \"홈으로\" 링크, \"재시도\" 버튼\n3. app/portfolio/error.tsx 생성:\n   - 포트폴리오 섹션 에러 경계\n   - Notion API 연결 실패 시 안내 메시지\n4. 테스트:\n   - /non-existent-route 접근 → 404 표시\n   - NOTION_API_KEY 잘못된 값 설정 → 에러 페이지 표시",
+      "verificationCriteria": "✓ /non-existent-route 접근 시 커스텀 404 페이지\n✓ API 오류 시 에러 페이지 표시\n✓ 에러 페이지에서 홈으로 링크 동작\n✓ 재시도 버튼 동작",
+      "analysisResult": "Notion CMS 기반 개인 포트폴리오 사이트 개발. 5 Phase로 구성된 로드맵 기반 구체적인 마일스톤 설정:\n- Phase 1: 환경 설정 및 기본 구조 검증 (3일)\n- Phase 2: 공통 모듈 및 API 안정화 (4일)\n- Phase 3: 핵심 기능 완성 (5일)\n- Phase 4: 추가 기능 및 최적화 (5일)\n- Phase 5: 배포 및 모니터링 (5일)\n\n각 Phase는 독립적 태스크로 분해되며, 순차적 의존성 관리로 팀 생산성 극대화."
+    },
+    {
+      "id": "e612200d-0c98-4dd9-95f3-db7b82688867",
+      "name": "Phase 3-5: 페이지네이션 UI 구현",
+      "description": "포트폴리오 목록에서 12개 초과 시 \"더 보기\" 버튼으로 추가 데이터 로드. useInfiniteQuery 활용",
+      "notes": "- useInfiniteQuery: 커서 기반 페이지네이션\n- API: /api/projects?cursor=...\n- 대안: URL 기반 페이지네이션 (?page=2) - 더 단순하고 공유 가능\n- 현재 구현 전략: 서버 컴포넌트(초기) + 클라이언트 컴포넌트(더 보기)",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "b523416d-3412-466d-bcfc-ea3628d41873"
+        },
+        {
+          "taskId": "7849bd84-1c7e-47f6-9f8b-2c45f87c0776"
+        }
+      ],
+      "createdAt": "2026-03-05T07:15:57.539Z",
+      "updatedAt": "2026-03-05T07:15:57.539Z",
+      "relatedFiles": [
+        {
+          "path": "components/portfolio/load-more-button.tsx",
+          "type": "CREATE",
+          "description": "더 보기 버튼 컴포넌트"
+        },
+        {
+          "path": "components/portfolio/portfolio-list.tsx",
+          "type": "TO_MODIFY",
+          "description": "페이지네이션 통합"
+        }
+      ],
+      "implementationGuide": "1. components/portfolio/load-more-button.tsx 생성:\n   - 'use client' 지시자\n   - useProjects 훅으로 다음 페이지 데이터 조회\n   - isPending 상태에서 버튼 비활성 + 스피너 표시\n   - hasNextPage가 false일 때 버튼 숨김\n2. components/portfolio/portfolio-list.tsx 수정:\n   - 초기 12개 데이터 렌더링\n   - LoadMoreButton 컴포넌트 통합\n   - 추가 데이터는 append 방식으로 목록 확장\n3. app/portfolio/page.tsx 수정 (필요시):\n   - 초기 cursor 값 전달\n4. 카테고리/검색 변경 시 페이지네이션 초기화 (useEffect)",
+      "verificationCriteria": "✓ 초기 12개 프로젝트 표시\n✓ hasMore=true일 때 '더 보기' 버튼 표시\n✓ 클릭 시 다음 12개 append\n✓ 마지막 페이지에서 버튼 숨김\n✓ 로딩 중 스피너 표시\n✓ 필터 변경 시 페이지네이션 초기화",
+      "analysisResult": "Notion CMS 기반 개인 포트폴리오 사이트 개발. 5 Phase로 구성된 로드맵 기반 구체적인 마일스톤 설정:\n- Phase 1: 환경 설정 및 기본 구조 검증 (3일)\n- Phase 2: 공통 모듈 및 API 안정화 (4일)\n- Phase 3: 핵심 기능 완성 (5일)\n- Phase 4: 추가 기능 및 최적화 (5일)\n- Phase 5: 배포 및 모니터링 (5일)\n\n각 Phase는 독립적 태스크로 분해되며, 순차적 의존성 관리로 팀 생산성 극대화."
+    },
+    {
+      "id": "4c8e4b75-cd4d-4166-9685-c38d25029f0c",
+      "name": "Phase 4-1: 홈 페이지 Featured 섹션 구현",
+      "description": "app/page.tsx에 Notion featured=true 프로젝트 최대 6개 표시. 기존 Hero, Features, Cta와 시각적 통합",
+      "notes": "- lib/notion/queries.ts의 getFeaturedProjects() 이미 구현됨\n- ISR revalidate=60으로 1분 내 변경 반영\n- 최대 6개 (2x3 그리드 또는 1x6 레이아웃)",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "a63a4a51-d958-41de-a57c-4d5184eeb58f"
+        },
+        {
+          "taskId": "7849bd84-1c7e-47f6-9f8b-2c45f87c0776"
+        }
+      ],
+      "createdAt": "2026-03-05T07:15:57.539Z",
+      "updatedAt": "2026-03-05T07:15:57.539Z",
+      "relatedFiles": [
+        {
+          "path": "components/sections/featured-projects.tsx",
+          "type": "CREATE",
+          "description": "Featured 프로젝트 섹션"
+        },
+        {
+          "path": "components/sections/index.ts",
+          "type": "TO_MODIFY",
+          "description": "배럴 익스포트 추가"
+        },
+        {
+          "path": "app/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "Featured 섹션 통합, revalidate 추가"
+        },
+        {
+          "path": "lib/notion/queries.ts",
+          "type": "REFERENCE",
+          "description": "getFeaturedProjects() 확인"
+        }
+      ],
+      "implementationGuide": "1. components/sections/featured-projects.tsx 생성:\n   - 서버 컴포넌트\n   - getFeaturedProjects() 호출\n   - project-card.tsx 재사용\n   - \"전체 포트폴리오 보기\" 버튼 → /portfolio 링크\n2. app/page.tsx 수정:\n   - Featured 섹션 위치: Hero 다음, Features 전 (또는 Cta 후)\n   - export const revalidate = 60 추가\n3. 스타일링: 기존 섹션과 일관된 디자인 (container, px-4 등)\n4. Featured 없음: graceful 처리 (섹션 미표시 또는 \"준비 중\" 메시지)",
+      "verificationCriteria": "✓ 홈 페이지에 Featured 섹션 표시\n✓ featured=true, status=완료 프로젝트 최대 6개 조회\n✓ 카드 클릭 시 /portfolio/[id] 이동\n✓ '전체 포트폴이오 보기' 버튼 → /portfolio 링크\n✓ Featured 없을 때 graceful 처리\n✓ ISR revalidate=60 적용\n✓ 기존 섹션과 시각적 일관성",
+      "analysisResult": "Notion CMS 기반 개인 포트폴리오 사이트 개발. 5 Phase로 구성된 로드맵 기반 구체적인 마일스톤 설정:\n- Phase 1: 환경 설정 및 기본 구조 검증 (3일)\n- Phase 2: 공통 모듈 및 API 안정화 (4일)\n- Phase 3: 핵심 기능 완성 (5일)\n- Phase 4: 추가 기능 및 최적화 (5일)\n- Phase 5: 배포 및 모니터링 (5일)\n\n각 Phase는 독립적 태스크로 분해되며, 순차적 의존성 관리로 팀 생산성 극대화."
+    },
+    {
+      "id": "92187bd8-2dd5-47ad-a363-cc206e96c57e",
+      "name": "Phase 4-2: SEO 최적화",
+      "description": "메타데이터 완성, app/sitemap.ts, app/robots.ts 생성, JSON-LD 추가, Lighthouse SEO 90점 이상",
+      "notes": "- generateMetadata API 이미 상세 페이지에 구현\n- OG 이미지: Notion 이미지 URL 사용 (URL 만료 주의)\n- metadataBase는 배포 후 프로덕션 도메인으로 변경",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "a63a4a51-d958-41de-a57c-4d5184eeb58f"
+        }
+      ],
+      "createdAt": "2026-03-05T07:15:57.539Z",
+      "updatedAt": "2026-03-05T07:15:57.539Z",
+      "relatedFiles": [
+        {
+          "path": "app/sitemap.ts",
+          "type": "CREATE",
+          "description": "동적 Sitemap 생성"
+        },
+        {
+          "path": "app/robots.ts",
+          "type": "CREATE",
+          "description": "robots.txt"
+        },
+        {
+          "path": "app/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "홈 메타데이터"
+        },
+        {
+          "path": "app/portfolio/[id]/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "JSON-LD 추가"
+        },
+        {
+          "path": "next.config.ts",
+          "type": "TO_MODIFY",
+          "description": "metadataBase 설정"
+        }
+      ],
+      "implementationGuide": "1. app/sitemap.ts 생성:\n   - getAllProjectIds() 활용\n   - 모든 완료 프로젝트 URL 동적 생성\n   - 형식: [{ url, lastModified, changeFrequency }]\n2. app/robots.ts 생성:\n   - Disallow: /api, /admin 등\n   - Allow: /\n3. app/page.tsx 메타데이터:\n   - title, description, keywords\n   - OG: og:title, og:description, og:image, og:url\n4. app/portfolio/[id]/page.tsx JSON-LD 추가:\n   - Article 스키마 (프로젝트 상세)\n   - imageUrl, author, datePublished 포함\n5. next.config.ts metadataBase:\n   - 개발: http://localhost:3000\n   - 프로덕션: 실제 도메인으로 업데이트 (Phase 5)\n6. Lighthouse SEO 점수 측정 (90점 이상 목표)",
+      "verificationCriteria": "✓ curl localhost:3000/sitemap.xml 형식 정상\n✓ curl localhost:3000/robots.txt 형식 정상\n✓ 상세 페이지 <head>에 OG 태그 존재\n✓ 상세 페이지 JSON-LD 스크립트 존재\n✓ Lighthouse SEO 점수 90점 이상",
+      "analysisResult": "Notion CMS 기반 개인 포트폴리오 사이트 개발. 5 Phase로 구성된 로드맵 기반 구체적인 마일스톤 설정:\n- Phase 1: 환경 설정 및 기본 구조 검증 (3일)\n- Phase 2: 공통 모듈 및 API 안정화 (4일)\n- Phase 3: 핵심 기능 완성 (5일)\n- Phase 4: 추가 기능 및 최적화 (5일)\n- Phase 5: 배포 및 모니터링 (5일)\n\n각 Phase는 독립적 태스크로 분해되며, 순차적 의존성 관리로 팀 생산성 극대화."
+    },
+    {
+      "id": "642c9f79-5060-402c-b9da-0c1e9bb48140",
+      "name": "Phase 4-3: 다크모드 Navbar 통합",
+      "description": "components/layout/navbar.tsx에 ThemeToggle 추가. 라이트/다크/시스템 모드 전환",
+      "notes": "- ThemeToggle은 이미 구현됨 (DropdownMenu 기반)\n- next-themes, app/layout.tsx의 ThemeProvider 이미 설정\n- globals.css의 @custom-variant dark 이미 설정\n- 포트폴리오 컴포넌트에서 dark: 클래스 사용 여부 확인",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "7849bd84-1c7e-47f6-9f8b-2c45f87c0776"
+        }
+      ],
+      "createdAt": "2026-03-05T07:15:57.539Z",
+      "updatedAt": "2026-03-05T07:15:57.539Z",
+      "relatedFiles": [
+        {
+          "path": "components/layout/navbar.tsx",
+          "type": "TO_MODIFY",
+          "description": "ThemeToggle 통합"
+        },
+        {
+          "path": "components/providers/theme-toggle.tsx",
+          "type": "REFERENCE",
+          "description": "ThemeToggle 컴포넌트"
+        }
+      ],
+      "implementationGuide": "1. components/layout/navbar.tsx 수정:\n   - ThemeToggle 컴포넌트 import\n   - Navbar 우측(모바일: Sheet 내부)에 ThemeToggle 버튼 추가\n2. 검증:\n   - 라이트/다크/시스템 모드 전환 정상 동작\n   - 새로고침 후 테마 유지 (localStorage)\n   - 모든 페이지 다크모드 적용\n   - 모바일 Sheet 드로어에서도 ThemeToggle 표시\n3. 다크모드 UI 점검:\n   - 카드, 배지, 코드 블록, 이미지 플레이스홀더 가독성\n   - 텍스트 컨트라스트 비율 확인",
+      "verificationCriteria": "✓ Navbar에 ThemeToggle 버튼 표시\n✓ 라이트/다크/시스템 모드 전환 정상\n✓ 새로고침 후 테마 유지\n✓ 모든 페이지 다크모드 적용\n✓ 모바일 Sheet에서 ThemeToggle 표시\n✓ 다크모드 텍스트 대비율 90점 이상",
+      "analysisResult": "Notion CMS 기반 개인 포트폴리오 사이트 개발. 5 Phase로 구성된 로드맵 기반 구체적인 마일스톤 설정:\n- Phase 1: 환경 설정 및 기본 구조 검증 (3일)\n- Phase 2: 공통 모듈 및 API 안정화 (4일)\n- Phase 3: 핵심 기능 완성 (5일)\n- Phase 4: 추가 기능 및 최적화 (5일)\n- Phase 5: 배포 및 모니터링 (5일)\n\n각 Phase는 독립적 태스크로 분해되며, 순차적 의존성 관리로 팀 생산성 극대화."
+    },
+    {
+      "id": "7ca3c589-3ef5-459d-857c-9c361cae2e77",
+      "name": "Phase 4-4: 반응형 디자인 완성 및 접근성",
+      "description": "모든 페이지 모바일/태블릿/데스크톱 반응형 레이아웃, 키보드 네비게이션, 스크린 리더 접근성 검증",
+      "notes": "- Navbar 모바일 Sheet는 이미 구현\n- project-card.tsx sizes prop 반응형 설정\n- portfolio-filters.tsx 좁은 화면 wrapping 확인\n- shadcn/ui + Radix UI 기본 WAI-ARIA 지원",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "7849bd84-1c7e-47f6-9f8b-2c45f87c0776"
+        }
+      ],
+      "createdAt": "2026-03-05T07:15:57.539Z",
+      "updatedAt": "2026-03-05T07:15:57.539Z",
+      "relatedFiles": [
+        {
+          "path": "components/portfolio/project-card.tsx",
+          "type": "REFERENCE",
+          "description": "반응형 이미지, sizes prop"
+        },
+        {
+          "path": "components/portfolio/portfolio-filters.tsx",
+          "type": "REFERENCE",
+          "description": "필터 탭 반응형"
+        }
+      ],
+      "implementationGuide": "1. 반응형 테스트 (Playwright):\n   - 375px (모바일): 1열 그리드, 햄버거 메뉴, 단일 컬럼\n   - 768px (태블릿): 2열 그리드, 필터 탭 정상\n   - 1280px (데스크톱): 3열 그리드, 전체 Navbar\n2. 키보드 네비게이션:\n   - Tab 키로 모든 인터랙티브 요소 접근 가능\n   - Shift+Tab으로 역순 네비게이션\n   - Enter/Space로 버튼/링크 활성화\n3. 스크린 리더:\n   - 이미지 alt 텍스트 (카테고리, 타이틀)\n   - 주요 랜드마크: <main>, <nav>, <header>, <footer>\n   - ARIA 레이블 (버튼, 폼 입력)\n4. Lighthouse 접근성 90점 이상",
+      "verificationCriteria": "✓ 375px, 768px, 1280px 뷰포트에서 레이아웃 정상\n✓ Tab 키로 모든 요소 포커스 이동\n✓ 이미지 alt 텍스트 유의미\n✓ Lighthouse 접근성 점수 90점 이상\n✓ iOS Safari 호환성 확인 (backdrop-filter 등)",
+      "analysisResult": "Notion CMS 기반 개인 포트폴리오 사이트 개발. 5 Phase로 구성된 로드맵 기반 구체적인 마일스톤 설정:\n- Phase 1: 환경 설정 및 기본 구조 검증 (3일)\n- Phase 2: 공통 모듈 및 API 안정화 (4일)\n- Phase 3: 핵심 기능 완성 (5일)\n- Phase 4: 추가 기능 및 최적화 (5일)\n- Phase 5: 배포 및 모니터링 (5일)\n\n각 Phase는 독립적 태스크로 분해되며, 순차적 의존성 관리로 팀 생산성 극대화."
+    },
+    {
+      "id": "fc3f36ed-456f-433b-bb87-d4b6a13fa4de",
+      "name": "Phase 5-1: 성능 최적화",
+      "description": "Lighthouse 성능 점수 개선, Core Web Vitals 통과, 번들 크기 최적화",
+      "notes": "- npm run build 후 번들 분석\n- API 라우트 캐시 헤더 이미 설정 (Cache-Control)\n- generateStaticParams 빌드 시간 모니터링",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "4c8e4b75-cd4d-4166-9685-c38d25029f0c"
+        },
+        {
+          "taskId": "7ca3c589-3ef5-459d-857c-9c361cae2e77"
+        }
+      ],
+      "createdAt": "2026-03-05T07:15:57.539Z",
+      "updatedAt": "2026-03-05T07:15:57.539Z",
+      "relatedFiles": [
+        {
+          "path": "next.config.ts",
+          "type": "TO_MODIFY",
+          "description": "번들 분석 설정"
+        }
+      ],
+      "implementationGuide": "1. Lighthouse 성능 측정:\n   - http://localhost:3000 (데스크톱)\n   - 성능 점수 90점 이상 목표\n2. Core Web Vitals 확인:\n   - LCP (Largest Contentful Paint) < 2.5s\n   - CLS (Cumulative Layout Shift) < 0.1\n   - FID (First Input Delay) < 100ms\n3. 최적화 항목:\n   - next/image priority prop (이미 상세 페이지에 적용)\n   - ISR revalidate=60 모든 동적 페이지\n   - 폰트 최적화: next/font (Geist)\n   - 동적 import: 큰 컴포넌트 (선택)\n4. 번들 분석:\n   - @next/bundle-analyzer 설치 (선택)\n   - ANALYZE=true npm run build\n   - 불필요한 의존성 제거",
+      "verificationCriteria": "✓ Lighthouse 성능 점수: 데스크톱 90점 이상, 모바일 80점 이상\n✓ Core Web Vitals 통과 (LCP < 2.5s, CLS < 0.1)\n✓ npm run build 완료\n✓ 번들 분석 완료 (크기 최적화 확인)",
+      "analysisResult": "Notion CMS 기반 개인 포트폴리오 사이트 개발. 5 Phase로 구성된 로드맵 기반 구체적인 마일스톤 설정:\n- Phase 1: 환경 설정 및 기본 구조 검증 (3일)\n- Phase 2: 공통 모듈 및 API 안정화 (4일)\n- Phase 3: 핵심 기능 완성 (5일)\n- Phase 4: 추가 기능 및 최적화 (5일)\n- Phase 5: 배포 및 모니터링 (5일)\n\n각 Phase는 독립적 태스크로 분해되며, 순차적 의존성 관리로 팀 생산성 극대화."
+    },
+    {
+      "id": "3bff66d6-d6f9-4afc-a9b9-becea75d1b95",
+      "name": "Phase 5-2: 배포 준비 및 프로덕션 환경",
+      "description": "Vercel 배포를 위한 최종 점검. 환경 변수, 빌드 설정, 프로덕션 메타데이터",
+      "notes": "- 환경 변수는 NEXT_PUBLIC_ 접두사 없음 (서버 전용)\n- generateStaticParams가 빌드 시 Notion API 호출\n- 빌드 실패 원인: env 미설정, TypeScript 오류, 이미지 도메인 미설정\n- ISR 동작 확인 (Vercel Edge Function)",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "fc3f36ed-456f-433b-bb87-d4b6a13fa4de"
+        }
+      ],
+      "createdAt": "2026-03-05T07:15:57.539Z",
+      "updatedAt": "2026-03-05T07:15:57.539Z",
+      "relatedFiles": [
+        {
+          "path": "next.config.ts",
+          "type": "TO_MODIFY",
+          "description": "metadataBase 프로덕션 도메인"
+        }
+      ],
+      "implementationGuide": "1. 로컬 빌드 확인:\n   - npm run build (오류 없음)\n   - npx tsc --noEmit (타입 오류 없음)\n2. next.config.ts 업데이트:\n   - metadataBase: 프로덕션 도메인으로 변경\n3. Vercel 환경 변수 설정:\n   - NOTION_API_KEY (서버 전용, NEXT_PUBLIC_ 없이)\n   - NOTION_DATABASE_ID (서버 전용)\n4. Vercel 배포:\n   - GitHub 레포지토리 연결\n   - 프로젝트 생성\n   - 환경 변수 입력 후 배포\n5. 배포 후 테스트:\n   - 프로덕션 URL에서 모든 페이지 접근\n   - Notion 데이터 조회 확인\n   - 404, 에러 페이지 동작\n6. 커스텀 도메인 연결 (선택)",
+      "verificationCriteria": "✓ npm run build 오류 없음\n✓ npx tsc --noEmit 타입 오류 없음\n✓ Vercel 프로젝트 생성\n✓ 환경 변수 설정 (NOTION_API_KEY, NOTION_DATABASE_ID)\n✓ 배포 완료\n✓ 프로덕션 URL에서 모든 기능 동작 확인",
+      "analysisResult": "Notion CMS 기반 개인 포트폴리오 사이트 개발. 5 Phase로 구성된 로드맵 기반 구체적인 마일스톤 설정:\n- Phase 1: 환경 설정 및 기본 구조 검증 (3일)\n- Phase 2: 공통 모듈 및 API 안정화 (4일)\n- Phase 3: 핵심 기능 완성 (5일)\n- Phase 4: 추가 기능 및 최적화 (5일)\n- Phase 5: 배포 및 모니터링 (5일)\n\n각 Phase는 독립적 태스크로 분해되며, 순차적 의존성 관리로 팀 생산성 극대화."
+    },
+    {
+      "id": "717c8ce0-ab4d-4f34-b842-40c81c552859",
+      "name": "Phase 5-3: 모니터링 설정",
+      "description": "Vercel Analytics 연동, 방문자 통계 수집, 에러 모니터링 (선택)",
+      "notes": "- Vercel Analytics: 익명 집계, GDPR 친화적\n- 개인정보 수집 최소화\n- 무료 Sentry: 에러 수 제한 있음",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "3bff66d6-d6f9-4afc-a9b9-becea75d1b95"
+        }
+      ],
+      "createdAt": "2026-03-05T07:15:57.539Z",
+      "updatedAt": "2026-03-05T07:15:57.539Z",
+      "relatedFiles": [
+        {
+          "path": "app/layout.tsx",
+          "type": "TO_MODIFY",
+          "description": "Analytics 컴포넌트 추가"
+        }
+      ],
+      "implementationGuide": "1. Vercel Analytics 연동:\n   - @vercel/analytics 설치: npm install @vercel/analytics\n   - app/layout.tsx에 <Analytics /> 추가 (from @vercel/analytics/react)\n   - 배포 후 24시간 내 데이터 수집 시작\n2. 통계 확인:\n   - Vercel 대시보드 → Analytics 탭\n   - 페이지뷰, 방문자 수 집계\n3. Google Analytics 4 (선택):\n   - @next/third-parties 활용\n   - GA4 Measurement ID 설정\n4. Sentry (선택):\n   - 무료 플랜 설정\n   - 클라이언트/서버 에러 추적",
+      "verificationCriteria": "✓ @vercel/analytics 설치\n✓ app/layout.tsx에 <Analytics /> 추가\n✓ 배포 후 Vercel 대시보드에서 통계 확인\n✓ 페이지뷰 수집 정상",
+      "analysisResult": "Notion CMS 기반 개인 포트폴리오 사이트 개발. 5 Phase로 구성된 로드맵 기반 구체적인 마일스톤 설정:\n- Phase 1: 환경 설정 및 기본 구조 검증 (3일)\n- Phase 2: 공통 모듈 및 API 안정화 (4일)\n- Phase 3: 핵심 기능 완성 (5일)\n- Phase 4: 추가 기능 및 최적화 (5일)\n- Phase 5: 배포 및 모니터링 (5일)\n\n각 Phase는 독립적 태스크로 분해되며, 순차적 의존성 관리로 팀 생산성 극대화."
+    },
+    {
+      "id": "358dfd09-5a88-4876-ad04-2d088c0ff12a",
+      "name": "Phase 5-4: 최종 QA 및 크로스 브라우저 테스트",
+      "description": "Chrome, Safari, Firefox에서 전체 기능 검증. 모바일/태블릿/데스크톱 레이아웃, 다크모드, 접근성",
+      "notes": "- Playwright로 E2E 테스트 자동화\n- Safari: backdrop-filter, CSS 그리드 호환성 확인\n- iOS: viewport 메타 태그 확인\n- 깨진 링크 검사 (모든 href 확인)",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "3bff66d6-d6f9-4afc-a9b9-becea75d1b95"
+        }
+      ],
+      "createdAt": "2026-03-05T07:15:57.539Z",
+      "updatedAt": "2026-03-05T07:15:57.539Z",
+      "relatedFiles": [],
+      "implementationGuide": "1. Playwright 자동화 테스트:\n   - 홈 → 포트폴리오 목록 → 상세 페이지 → 뒤로가기 플로우\n   - 카테고리 필터 → 검색 → 결과 확인\n   - 다크모드 토글 → 새로고침 → 모드 유지\n2. 반응형 테스트:\n   - browser_resize(375, 812) - 모바일\n   - browser_resize(768, 1024) - 태블릿\n   - browser_resize(1280, 800) - 데스크톱\n   - 각각 스냅샷 촬영\n3. 브라우저 호환성:\n   - Chrome 최신 버전\n   - Safari 최신 버전 (iOS, macOS)\n   - Firefox 최신 버전\n4. 최종 Lighthouse:\n   - 성능 90점 이상\n   - 접근성 90점 이상\n   - SEO 90점 이상\n   - Best Practices 90점 이상",
+      "verificationCriteria": "✓ Chrome, Safari, Firefox에서 정상 동작\n✓ 모바일/태블릿/데스크톱 레이아웃 정상\n✓ 다크모드 모든 브라우저에서 동작\n✓ 모든 링크 및 버튼 정상 (깨진 링크 없음)\n✓ 키보드 네비게이션 정상\n✓ 최종 Lighthouse: 성능/접근성/SEO/Best Practices 각 90점 이상",
+      "analysisResult": "Notion CMS 기반 개인 포트폴리오 사이트 개발. 5 Phase로 구성된 로드맵 기반 구체적인 마일스톤 설정:\n- Phase 1: 환경 설정 및 기본 구조 검증 (3일)\n- Phase 2: 공통 모듈 및 API 안정화 (4일)\n- Phase 3: 핵심 기능 완성 (5일)\n- Phase 4: 추가 기능 및 최적화 (5일)\n- Phase 5: 배포 및 모니터링 (5일)\n\n각 Phase는 독립적 태스크로 분해되며, 순차적 의존성 관리로 팀 생산성 극대화."
+    }
+  ]
+}
